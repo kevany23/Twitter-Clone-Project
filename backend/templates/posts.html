@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Posts</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+  <form action="/addPost" method="POST">
+    <input type="text" name="content"> Status here
+    <br>
+    <input type="submit" value="Post">
+  </form>
+  <table>
+    {% for post in postList %}
+    <tr>
+      <td>
+        <b>{{post.username}}</b>
+        {{post.timestamp.date()}}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p>{{post.content}}</p>
+        <br>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
