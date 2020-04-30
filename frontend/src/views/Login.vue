@@ -4,10 +4,14 @@
       <b-container fluid>
         <b-form>
           Login Here
+          <b-alert show variant="danger">
+          Login Failed
+          </b-alert>
           <b-row>
             <b-form-input
             class="loginField"
             placeholder="Username"
+            v-model="username"
             >
             </b-form-input>
           </b-row>
@@ -16,11 +20,13 @@
             class="loginField"
             type="password"
             placeholder="Password"
+            v-model="password"
             >
             </b-form-input>
           </b-row>
           <b-row>
             <b-button
+            v-on:click="loginAuth"
             >
             Log In
             </b-button>
@@ -82,7 +88,8 @@ export default {
   components: {},
   data() {
     return {
-      foo: 1,
+      username: "",
+      password: "",
       createUsername: "",
       createPassword: "",
       verifyPassword:"",
@@ -106,7 +113,24 @@ export default {
           console.log(err);
         }
       );
-    }
+    },
+    loginAuth() {
+      const path = BACKEND_URL + 'loginAuth';
+      axios.post(path, {
+        username: this.username,
+        password: this.password,
+      })
+      .then(
+        (res) => {
+          console.log(res);
+        }
+      )
+      .catch(
+        (err) => {
+          console.log(err);
+        }
+      );
+    },
   }
 };
 </script>

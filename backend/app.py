@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -37,7 +37,6 @@ def handleCreateAccount():
   #Lookup username
   accNameQuery = Account.query.filter_by(username=formData['createUsername']).first()
   if not (accNameQuery is None):
-    print("Username already used")
     return Response("Username already in use", 400)
   #Check passwords
   if formData['createPassword'] != formData['verifyPassword']:
@@ -48,6 +47,16 @@ def handleCreateAccount():
   db.session.commit()
 
   return jsonify({'status': 'success'})
+
+@app.route('/loginAuth', methods=['POST'])
+def handeLogin():
+  formData = request.get_json()
+  accountLookup = Account.query.filter_by(username=formData['username']).first()
+  if accountLookup is None:
+    return Response("Username doesn't exist", 401)
+  if accountLookup.password != formData['password']:
+    return Response("Password is incorrect", 401)
+  return Response('Authenticated', 200);
 
 if __name__ == '__main__':
     app.run(debug=True)
