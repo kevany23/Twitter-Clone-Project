@@ -4,7 +4,10 @@
       <b-container fluid>
         <b-form>
           Login Here
-          <b-alert show variant="danger">
+          <b-alert
+          show variant="danger"
+          v-if="loginFail"
+          >
           Login Failed
           </b-alert>
           <b-row>
@@ -29,6 +32,27 @@
             v-on:click="loginAuth"
             >
             Log In
+            </b-button>
+          </b-row>
+          <b-row>
+            <b-button
+            v-on:click="authenticationTest"
+            >
+              Authentication Test
+            </b-button>
+          </b-row>
+          <b-row>
+            <b-button
+            v-on:click="localStorageTest"
+            >
+              Local Storage Test
+            </b-button>
+          </b-row>
+          <b-row>
+            <b-button
+            v-on:click="logout"
+            >
+              Logout
             </b-button>
           </b-row>
         </b-form>
@@ -82,6 +106,7 @@
 // @ is an alias to /src
 import BACKEND_URL from "../config/urls.js";
 import axios from "axios";
+import * as loginStorage from "../config/LoginStorage.js"
 
 export default {
   name: "Login",
@@ -93,7 +118,17 @@ export default {
       createUsername: "",
       createPassword: "",
       verifyPassword:"",
+      access_token: "abc",
+      loginFail: false,
     };
+  },
+  created() {
+    if (this.isAuthenticated()) {
+      console.log("preMounted authenticated");
+      this.$router.push('/home');
+    } else {
+      loginStorage.deleteLoginToken();
+    }
   },
   methods: {
     createAccount() {
@@ -121,14 +156,65 @@ export default {
         password: this.password,
       })
       .then(
-        (res) => {
-          console.log(res);
+        (response) => {
+          this.access_token = response.data.access_token;
+          loginStorage.setLoginToken(this.access_token);
+          this.$router.push('/home');
         }
       )
       .catch(
         (err) => {
           console.log(err);
+          this.loginFail = true;
         }
+      );
+    },
+    isAuthenticated() {
+      return loginStorage.isLoggedIn();
+    },
+    authenticationTest() {
+      const path = BACKEND_URL + 'protected';
+      axios.get(path, {
+        headers: {
+          Authorization: "Bearer " + this.access_token,
+        },
+        access_token: this.access_token,
+      })
+      .then( (res) => {
+        console.log("Succeess");
+        console.log(res);
+      }
+
+      )
+      .catch( (err) => {
+        console.log("Error");
+        console.log(err);
+        //this.$router.push('/about');
+      }
+
+      );
+    },
+    localStorageTest() {
+      console.log(loginStorage.getLoginToken());
+    },
+    logout() {
+      loginStorage.deleteLoginToken();
+      const path = BACKEND_URL + 'logout';
+      axios.get(path, { 
+        headers: {
+          Authorization: "Bearer " + this.access_token,
+        }
+      })
+      .then( (res) => {
+        console.log("Success");
+        console.log(res);
+      }
+
+      )
+      .catch( (err) => {
+        console.log("Error");
+        console.log(err);
+      }
       );
     },
   }

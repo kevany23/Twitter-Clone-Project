@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Login</title>
+{% endblock %}
+
+{% block body %}
+<div class="content">
+  <p>Logged in as: {{user.id}}</p>
+  <p>User: {{user}}</p>
+  <form action="/logout">
+    <input type="submit" value="Log Out"></input>
+  </form>
+</div>
+{% endblock %}
