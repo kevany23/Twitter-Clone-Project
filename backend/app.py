@@ -161,5 +161,27 @@ def loginPage():
   else:
     return Response("Passwords don't match", 400)
 
+"""
+Backend call to find users
+"""
+@app.route('/findUsers', methods = ['GET'])
+def findUsers():
+  userLookup = Account.query.all()
+  respQuery = {'users': []}
+  for user in userLookup:
+    userData = {
+      'id': user.id,
+      'username': user.username,
+    }
+    respQuery['users'].append(userData)
+  return jsonify(respQuery)
+
+"""
+Backend call to follow another user
+"""
+@app.route('/followUser', methods=['POST'])
+def followUser():
+  return response("wip", 400)
+
 if __name__ == '__main__':
     app.run(debug=True)
