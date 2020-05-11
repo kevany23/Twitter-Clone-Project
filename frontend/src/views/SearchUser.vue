@@ -20,7 +20,7 @@
       class = "userCard"
       v-bind:title="user.username"
       >
-        <b-button>
+        <b-button v-on:click="followUser(user.username)">
           Follow
         </b-button>
       </b-card>
@@ -65,9 +65,14 @@ export default {
         console.log("Error");
       });
     },
-    followUser() {
-      axios.post(url("/followUser"), {
-        headers: loginStorage.authHeader(),
+    followUser(username) {
+      axios.post(url("followUser"), {
+        toFollow: username,
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + loginStorage.getLoginToken(),
+        },
       })
       .then( (res) => {
         console.log("Success");

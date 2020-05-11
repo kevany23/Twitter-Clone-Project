@@ -1,6 +1,6 @@
 from flask import (
     Flask, render_template, request, redirect,
-    jsonify, Response, url_for
+    jsonify, Response, url_for, Blueprint
 )
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -27,6 +27,9 @@ app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 jwt = JWTManager(app)
 blacklist = set()
+
+from blueprints.follow import FollowBlueprint
+app.register_blueprint(FollowBlueprint)
 
 from database.database import *
 db.init_app(app)
@@ -179,9 +182,11 @@ def findUsers():
 """
 Backend call to follow another user
 """
+"""
 @app.route('/followUser', methods=['POST'])
 def followUser():
   return response("wip", 400)
+"""
 
 if __name__ == '__main__':
     app.run(debug=True)

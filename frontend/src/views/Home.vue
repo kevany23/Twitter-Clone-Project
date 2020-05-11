@@ -1,6 +1,18 @@
 <template>
   <div>
     <NavBar></NavBar>
+    <b-form>
+      <b-row>
+        <b-button v-on:click="authenticationTest">
+          Authentication Test
+        </b-button>
+      </b-row>
+      <b-row>
+        <b-button v-on:click="localStorageTest">
+          Local Storage Test
+        </b-button>
+      </b-row>
+    </b-form>
   </div>
 </template>
 
@@ -14,28 +26,37 @@ import NavBar from "../components/NavBar.vue";
 export default {
   name: "Home",
   components: {
-    NavBar,
+    NavBar
   },
-  created() {
-  },
+  created() {},
   data() {
     return {};
   },
   methods: {
-    logOut() {
-      const tokenHeader = loginStorage.authHeader();
-      loginStorage.deleteLoginToken();
-      axios.get(url("logout"), {
-          headers: tokenHeader,
-        })
-        .then((res) => {
-          console.log("Success");
-          console.log(res);
-          this.$router.push('/login');
-        })
-        .catch((err) => {
-          console.log("Error");
-        });
+    isAuthenticated() {
+      return loginStorage.isLoggedIn();
+    },
+    authenticationTest() {
+      axios.get(url('protected'), {
+        headers: loginStorage.authHeader(),
+        access_token: this.access_token,
+      })
+      .then( (res) => {
+        console.log("Succeess");
+        console.log(res);
+      }
+
+      )
+      .catch( (err) => {
+        console.log("Error");
+        console.log(err);
+        //this.$router.push('/about');
+      }
+
+      );
+    },
+    localStorageTest() {
+      console.log(loginStorage.getLoginToken());
     },
   }
 };
