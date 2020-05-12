@@ -167,6 +167,7 @@ def loginPage():
 """
 Backend call to find users
 """
+"""
 @app.route('/findUsers', methods = ['GET'])
 def findUsers():
   userLookup = Account.query.all()
@@ -178,14 +179,6 @@ def findUsers():
     }
     respQuery['users'].append(userData)
   return jsonify(respQuery)
-
-"""
-Backend call to follow another user
-"""
-"""
-@app.route('/followUser', methods=['POST'])
-def followUser():
-  return response("wip", 400)
 """
 
 if __name__ == '__main__':

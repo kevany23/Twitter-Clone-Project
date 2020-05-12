@@ -20,8 +20,16 @@
       class = "userCard"
       v-bind:title="user.username"
       >
-        <b-button v-on:click="followUser(user.username)">
+        <b-button
+        v-if="! user.following"
+        v-on:click="followUser(user)"
+        >
           Follow
+        </b-button>
+        <b-button v-else
+        v-on:click="unfollowUser(user)"
+        >
+          Unfollow
         </b-button>
       </b-card>
       </div>
@@ -65,18 +73,37 @@ export default {
         console.log("Error");
       });
     },
-    followUser(username) {
+    followUser(user) {
+      let username = user.username;
+      console.log(user);
       axios.post(url("followUser"), {
         toFollow: username,
       },
       {
-        headers: {
-          Authorization: "Bearer " + loginStorage.getLoginToken(),
-        },
+        headers: loginStorage.authHeader(),
       })
       .then( (res) => {
         console.log("Success");
         console.log(res);
+        username.following = true;
+      })
+      .catch( (err) => {
+        console.log("Error");
+      });
+    },
+    unfollowUser(user) {
+      let username = user.username;
+      console.log(user);
+      axios.post(url("unfollowUser"), {
+        toUnfollow: username,
+      },
+      {
+        headers: loginStorage.authHeader(),
+      })
+      .then( (res) => {
+        console.log("Success");
+        console.log(res);
+        username.following = false;
       })
       .catch( (err) => {
         console.log("Error");
