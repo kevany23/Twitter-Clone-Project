@@ -4,6 +4,7 @@ import VueHome from '../views/VueHome.vue';
 import Login from '../views/Login.vue';
 import Home from '../views/Home.vue';
 import SearchUser from '../views/SearchUser.vue';
+import Profile from '../views/Profile.vue';
 
 Vue.use(VueRouter);
 
@@ -39,6 +40,11 @@ const routes = [
     path: '/searchUser',
     name: 'SearchUser',
     component: SearchUser,
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
   },
 ];
 

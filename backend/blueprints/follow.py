@@ -89,4 +89,24 @@ def unfollowUser(userId, followingId):
   db.session.delete(followLookup)
   db.session.commit()
   return True
-  
+
+"""
+Get all of the accounts the user is profiling
+Currently used for the profile page
+"""
+@FollowBlueprint.route('/getFollowing', methods=['GET'])
+@jwt_required
+def handleUserFollowingRequest():
+  userId = get_jwt_identity()
+  lookup = getUserFollowing(userId)
+  following = {'following': lookup}
+  return jsonify(following)
+
+def getUserFollowing(userId):
+  followLookup = Follow.query.filter_by(follower_id=userId).all()
+  followList = []
+  for user in followLookup:
+    #lookup user
+    userLookup = Account.query.filter_by(id=user.id).one()
+    followList.append({'userId': user.id, 'username': userLookup.username})
+  return followList

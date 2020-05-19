@@ -13,6 +13,29 @@
         </b-button>
       </b-row>
     </b-form>
+    <br>
+    <div id=postStatus>
+      <b-form>
+        <b-row>
+          <b-form-textarea
+          v-model="postContent"
+          style="height:150px"
+          >
+          </b-form-textarea>
+        </b-row>
+        <b-row>
+          <b-button v-on:click="submitPost">
+          Post Status
+          </b-button>
+        </b-row>
+      </b-form>
+    </div>
+    <div id="newsFeed">
+      <table>
+        <tr>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -28,9 +51,14 @@ export default {
   components: {
     NavBar
   },
-  created() {},
+  created() {
+    this.loadPosts();
+  },
   data() {
-    return {};
+    return {
+      postContent: "",
+      posts: [],
+    };
   },
   methods: {
     isAuthenticated() {
@@ -58,6 +86,39 @@ export default {
     localStorageTest() {
       console.log(loginStorage.getLoginToken());
     },
+    submitPost() {
+      axios.post(url('submitPost'), {
+        content: this.postContent,
+      },
+      {
+        headers: loginStorage.authHeader()
+      })
+      .then( (res) => {
+        console.log("Success");
+      })
+      .catch( (err) => {
+        console.log("Error");
+      });
+    },
+    loadPosts() {
+      axios.get(url('getPosts'), {
+        headers: loginStorage.authHeader(),
+      })
+      .then( (res) => {
+        console.log("Success");
+      })
+      .catch( (res) => {
+        console.log("Error");
+      })
+    },
   }
 };
 </script>
+
+<style>
+#postStatus {
+  position: absolute;
+  width: 800px;
+  left: 10%;
+}
+</style>

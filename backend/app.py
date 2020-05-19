@@ -28,13 +28,21 @@ app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access']
 jwt = JWTManager(app)
 blacklist = set()
 
-from blueprints.follow import FollowBlueprint
+from blueprints.follow import FollowBlueprint, getUserFollowing
+from blueprints.post import PostBlueprint
 app.register_blueprint(FollowBlueprint)
+app.register_blueprint(PostBlueprint)
 
 from database.database import *
 db.init_app(app)
 db.app = app
 db.create_all()
+
+"""
+Run migrations here
+"""
+
+from database.migration import *
 
 @app.route('/')
 def index():
@@ -164,22 +172,11 @@ def loginPage():
   else:
     return Response("Passwords don't match", 400)
 
-"""
-Backend call to find users
-"""
-"""
-@app.route('/findUsers', methods = ['GET'])
-def findUsers():
-  userLookup = Account.query.all()
-  respQuery = {'users': []}
-  for user in userLookup:
-    userData = {
-      'id': user.id,
-      'username': user.username,
-    }
-    respQuery['users'].append(userData)
-  return jsonify(respQuery)
-"""
+@app.route('/newsFeed', methods = ['POST'])
+@jwt_required
+def getNewsFeed():
+  user = get_jwt_identity()
+  return Response("wip", 200)
 
 if __name__ == '__main__':
     app.run(debug=True)

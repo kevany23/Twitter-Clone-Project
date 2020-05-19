@@ -14,22 +14,16 @@
     <div id ="cardDiv">
       <div
       v-for="user in userList"
-      :key="user.username"
+      :key="user.id"
       >
       <b-card
       class = "userCard"
       v-bind:title="user.username"
       >
         <b-button
-        v-if="! user.following"
-        v-on:click="followUser(user)"
+        v-on:click="followButtonClick(user)"
         >
-          Follow
-        </b-button>
-        <b-button v-else
-        v-on:click="unfollowUser(user)"
-        >
-          Unfollow
+          {{followButtonDisplay(user)}}
         </b-button>
       </b-card>
       </div>
@@ -73,6 +67,20 @@ export default {
         console.log("Error");
       });
     },
+    followButtonDisplay(user) {
+      if (user.following) {
+        return "Unfollow"
+      } else {
+        return "Follow"
+      }
+    },
+    followButtonClick(user) {
+      if (user.following) {
+        this.unfollowUser(user);
+      } else {
+        this.followUser(user);
+      }
+    },
     followUser(user) {
       let username = user.username;
       console.log(user);
@@ -85,7 +93,7 @@ export default {
       .then( (res) => {
         console.log("Success");
         console.log(res);
-        username.following = true;
+        user.following = true;
       })
       .catch( (err) => {
         console.log("Error");
@@ -103,7 +111,7 @@ export default {
       .then( (res) => {
         console.log("Success");
         console.log(res);
-        username.following = false;
+        user.following = false;
       })
       .catch( (err) => {
         console.log("Error");
