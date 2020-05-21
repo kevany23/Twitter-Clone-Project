@@ -105,8 +105,8 @@ def handleUserFollowingRequest():
 def getUserFollowing(userId):
   followLookup = Follow.query.filter_by(follower_id=userId).all()
   followList = []
-  for user in followLookup:
+  for follow in followLookup:
     #lookup user
-    userLookup = Account.query.filter_by(id=user.id).one()
-    followList.append({'userId': user.id, 'username': userLookup.username})
+    userLookup = Account.query.filter_by(id=follow.following_id).one()
+    followList.append({'userId': userLookup.id, 'username': userLookup.username})
   return followList

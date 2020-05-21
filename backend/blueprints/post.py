@@ -20,11 +20,15 @@ PostBlueprint = Blueprint('PostBlueprint', __name__)
 # Get posts from a certain user
 def getUserPosts(userId):
     postLookup = Post.query.filter_by(user_id=userId).all()
+    username = Account.query.filter_by(id=userId).one().username
     postList = []
     for post in postLookup:
         postJson = {
             'timestamp': post.timestamp,
-            'content': post.content
+            'content': post.content,
+            'uid': userId,
+            'username': username
+
         }
         postList.append(postJson)
     return postList
@@ -36,8 +40,10 @@ def getFollowPosts():
     userId = get_jwt_identity()
     userList = getUserFollowing(userId)
     #userList.append({'userId': userId})
+    userList.append({'userId': userId})
     posts = []
     for user in userList:
+        print(user)
         uid = user['userId']
         userPosts = getUserPosts(uid)
         if not (userPosts is None):

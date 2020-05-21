@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="homeDiv">
     <NavBar></NavBar>
     <b-form>
       <b-row>
@@ -30,11 +30,18 @@
         </b-row>
       </b-form>
     </div>
+    <br>
     <div id="newsFeed">
-      <table>
-        <tr>
-        </tr>
-      </table>
+      <div
+      v-for="(post, idx) in posts"
+      :key="idx"
+      >
+        <Post
+        v-bind:content="post.content"
+        v-bind:timestamp="post.timestamp"
+        v-bind:username="post.username"
+        ></Post>
+      </div>
     </div>
   </div>
 </template>
@@ -45,11 +52,13 @@ import { BACKEND_URL, url } from "../config/urls.js";
 import axios from "axios";
 import * as loginStorage from "../config/LoginStorage.js";
 import NavBar from "../components/NavBar.vue";
+import Post from "../components/Post.vue"
 
 export default {
   name: "Home",
   components: {
-    NavBar
+    NavBar,
+    Post
   },
   created() {
     this.loadPosts();
@@ -106,6 +115,7 @@ export default {
       })
       .then( (res) => {
         console.log("Success");
+        this.posts = res.data.posts;
       })
       .catch( (res) => {
         console.log("Error");
@@ -117,7 +127,7 @@ export default {
 
 <style>
 #postStatus {
-  position: absolute;
+  position: relative;
   width: 800px;
   left: 10%;
 }
