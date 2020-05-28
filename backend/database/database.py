@@ -26,4 +26,10 @@ class Follow(db.Model):
   follower = db.relationship("Account", foreign_keys=[follower_id])
   following = db.relationship("Account", foreign_keys=[following_id])
 
+class PostLike(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  post_id = db.Column(db.Integer, db.ForeignKey(Post.id), nullable=False)
+  account_id = db.Column(db.Integer, db.ForeignKey(Account.id), nullable=False)
+  post = db.relationship("Post", foreign_keys=[post_id])
+  account = db.relationship("Account", foreign_keys=[account_id])
   

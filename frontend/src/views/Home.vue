@@ -131,4 +131,9 @@ export default {
   width: 800px;
   left: 10%;
 }
+#newsFeed {
+  position: relative;
+  left: 10%;
+  width: 70%;
+}
 </style>
