@@ -24,11 +24,11 @@ def getUserPosts(userId):
     postList = []
     for post in postLookup:
         postJson = {
+            'id': post.id,
             'timestamp': post.timestamp,
             'content': post.content,
             'uid': userId,
             'username': username
-
         }
         postList.append(postJson)
     return postList
@@ -48,6 +48,7 @@ def getFollowPosts():
         userPosts = getUserPosts(uid)
         if not (userPosts is None):
             posts = posts + userPosts
+    processLikes(userId, posts)
     response = {'posts': posts}
     return jsonify(response)
 
@@ -56,11 +57,44 @@ def getFollowPosts():
 def submitPost():
     userId = get_jwt_identity()
     data = request.get_json()
-    print(data)
     new_post = Post(content=data['content'], timestamp=datetime.now(),
         user_id=userId)
     db.session.add(new_post)
     db.session.commit()
     return Response("Success", 200)
 
-# Sort in order
+@PostBlueprint.route('/likePost', methods=['POST'])
+@jwt_required
+def handlePostLike():
+    userId = get_jwt_identity()
+    data = request.get_json()
+    #check if like is already there
+    lookup = PostLike.query.filter_by(post_id=data['postId'], account_id=userId).first()
+    if not (lookup is None):
+        return Response("Already liked", 400)
+    new_like = PostLike(post_id = data['postId'], account_id=userId)
+    db.session.add(new_like)
+    db.session.commit()
+    return Response("Success", 200)
+
+@PostBlueprint.route('/unlikePost', methods=['POST'])
+@jwt_required
+def handlePostUnlike():
+    userId = get_jwt_identity()
+    data = request.get_json()
+    lookup = PostLike.query.filter_by(post_id=data['postId'], account_id=userId).first()
+    if lookup is None:
+        return Response("Nothing to unlike", 400)
+    db.session.delete(lookup)
+    db.session.commit()
+    return Response("Success", 200)
+
+#Helper to process user liked posts so they can be shown on page load
+def processLikes(userId, posts):
+    print(posts)
+    for post in posts:
+        likeLookup = PostLike.query.filter_by(post_id=post['id'], account_id=userId).first()
+        if likeLookup is None:
+            post['liked'] = False
+        else:
+            post['liked'] = True

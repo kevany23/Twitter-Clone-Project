@@ -40,6 +40,10 @@
         v-bind:content="post.content"
         v-bind:timestamp="post.timestamp"
         v-bind:username="post.username"
+        v-bind:id="post.id"
+        v-bind:liked="post.liked"
+        @post-liked="handleLike"
+        @post-unliked="handleUnlike"
         ></Post>
       </div>
     </div>
@@ -120,6 +124,36 @@ export default {
       .catch( (res) => {
         console.log("Error");
       })
+    },
+    handleLike(postId) {
+      axios.post(url('likePost'), {
+        postId: postId
+      },
+      {
+        headers: loginStorage.authHeader(),
+      })
+      .then( (res) => {
+        console.log("Success");
+      })
+      .catch( (res) => {
+        console.log("Error");
+      });
+    },
+    handleUnlike(postId) {
+      console.log("Unliked");
+      console.log(postId);
+      axios.post(url('unlikePost'), {
+        postId: postId
+      },
+      {
+        headers: loginStorage.authHeader(),
+      })
+      .then( (res) => {
+        console.log("Success");
+      })
+      .catch( (res) => {
+        console.log("Error");
+      });
     },
   }
 };
