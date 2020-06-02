@@ -33,3 +33,11 @@ class PostLike(db.Model):
   post = db.relationship("Post", foreign_keys=[post_id])
   account = db.relationship("Account", foreign_keys=[account_id])
   
+class Comment(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  post_id = db.Column(db.Integer, db.ForeignKey(Post.id), nullable=False)
+  account_id = db.Column(db.Integer, db.ForeignKey(Account.id), nullable=False)
+  timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+  content = db.Column(db.String(500), nullable=False)
+  post = db.relationship("Post", foreign_keys=[post_id])
+  account = db.relationship("Account", foreign_keys=[account_id])

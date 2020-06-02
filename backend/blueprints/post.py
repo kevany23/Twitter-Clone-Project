@@ -49,6 +49,7 @@ def getFollowPosts():
         if not (userPosts is None):
             posts = posts + userPosts
     processLikes(userId, posts)
+    processComments(posts)
     response = {'posts': posts}
     return jsonify(response)
 
@@ -91,10 +92,39 @@ def handlePostUnlike():
 
 #Helper to process user liked posts so they can be shown on page load
 def processLikes(userId, posts):
-    print(posts)
     for post in posts:
         likeLookup = PostLike.query.filter_by(post_id=post['id'], account_id=userId).first()
         if likeLookup is None:
             post['liked'] = False
         else:
             post['liked'] = True
+
+#Helper to insert comments for each post
+def processComments(posts):
+    for post in posts:
+        #Lookup the comment
+        commentLookup = Comment.query.filter_by(post_id=post['id']).order_by(Comment.timestamp).all()
+        post['comments'] = []
+        if commentLookup is None:
+            continue
+        for comment in commentLookup:
+            post['comments'].append({
+                'content': comment.content
+            })
+    
+
+@PostBlueprint.route('/submitComment', methods=['POST'])
+@jwt_required
+def handleComment():
+    userId = get_jwt_identity()
+    data = request.get_json()
+    postId = data['postId']
+    content = data['content']
+    #Validate postId
+    postLookup = Post.query.filter_by(id=postId)
+    if postLookup is None:
+        return Response("Invalid Post", 400)
+    comment = Comment(post_id=postId, account_id=userId, timestamp=datetime.now(), content=content)
+    db.session.add(comment)
+    db.session.commit()
+    return Response("Success", 200)

@@ -6,13 +6,45 @@
     <p>
     {{content}}
     </p>
-    <b-button
-    v-bind:style="likeButtonStyle"
-    v-on:click="onLikeClick"
-    >
-      <b-icon-arrow-up class="h4 mb-0">
-      </b-icon-arrow-up>
-    </b-button>
+    <b-button-toolbar>
+      <b-button
+      v-bind:style="likeButtonStyle"
+      v-on:click="onLikeClick"
+      >
+        <b-icon-arrow-up class="h4 mb-0">
+        </b-icon-arrow-up>
+      </b-button>
+      <b-button v-on:click="toggleComments">
+        Comments
+      </b-button>
+    </b-button-toolbar>
+    <div>
+      <b-collapse v-model="showComments">
+        <div
+        v-for="comment in comments"
+        :key="comment.content"
+        >
+          <p> {{comment.content}}</p>
+        </div>
+        <b-form>
+          <b-row>
+            <b-form-textarea
+            style="height:50px"
+            placeholder="Add a comment..."
+            v-model="commentContent"
+            >
+            </b-form-textarea>
+          </b-row>
+          <b-row>
+            <b-button
+            v-on:click="submitComment"
+            >
+              Comment
+            </b-button>
+          </b-row>
+        </b-form>
+      </b-collapse>
+    </div>
   </b-card>
 </div>
 </template>
@@ -26,7 +58,7 @@ export default {
   components: {
     BIconArrowUp,
   },
-  props: ['id', 'content', 'username', 'timestamp', 'liked'],
+  props: ['id', 'content', 'username', 'timestamp', 'liked', 'comments'],
   mounted() {
       this.buttonMode = this.liked;
       if (this.liked) {
@@ -40,7 +72,9 @@ export default {
       likeButtonStyle: {
         backgroundColor: 'DodgerBlue',
         buttonMode: false,
-      }
+      },
+      showComments: false,
+      commentContent: "",
     };
   },
   methods: {
@@ -62,6 +96,12 @@ export default {
     },
     unlike() {
       this.$emit('post-unliked', this.id);
+    },
+    toggleComments() {
+      this.showComments = ! this.showComments;
+    },
+    submitComment() {
+      this.$emit('comment-submit', this.id, this.commentContent);
     },
   },
 }

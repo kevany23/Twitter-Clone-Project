@@ -42,8 +42,10 @@
         v-bind:username="post.username"
         v-bind:id="post.id"
         v-bind:liked="post.liked"
+        v-bind:comments="post.comments"
         @post-liked="handleLike"
         @post-unliked="handleUnlike"
+        @comment-submit="submitComment"
         ></Post>
       </div>
     </div>
@@ -149,6 +151,21 @@ export default {
         headers: loginStorage.authHeader(),
       })
       .then( (res) => {
+        console.log("Success");
+      })
+      .catch( (res) => {
+        console.log("Error");
+      });
+    },
+    submitComment(postId, content) {
+      axios.post(url('submitComment'), {
+        postId: postId,
+        content: content,
+      },
+      {
+        headers: loginStorage.authHeader(),
+      })
+      .then ( (res) => {
         console.log("Success");
       })
       .catch( (res) => {
