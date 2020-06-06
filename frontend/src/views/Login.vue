@@ -3,7 +3,7 @@
     <div>
       <b-container fluid>
         <b-form>
-          Login Here
+          <h5>Login Here</h5>
           <b-alert
           show variant="danger"
           v-if="loginFail"
@@ -29,30 +29,10 @@
           </b-row>
           <b-row>
             <b-button
+            class="formButton"
             v-on:click="loginAuth"
             >
             Log In
-            </b-button>
-          </b-row>
-          <b-row>
-            <b-button
-            v-on:click="authenticationTest"
-            >
-              Authentication Test
-            </b-button>
-          </b-row>
-          <b-row>
-            <b-button
-            v-on:click="localStorageTest"
-            >
-              Local Storage Test
-            </b-button>
-          </b-row>
-          <b-row>
-            <b-button
-            v-on:click="logout"
-            >
-              Logout
             </b-button>
           </b-row>
         </b-form>
@@ -61,7 +41,7 @@
         <br>
         <br>
         <b-form>
-          Create Account
+          <h5>Create Account</h5>
           <b-row>
             <b-form-input
             class="loginField"
@@ -90,6 +70,7 @@
           </b-row>
           <b-row>
             <b-button
+            class="formButton"
             v-on:click="createAccount"
             >
             Create Account
@@ -172,63 +153,22 @@ export default {
     isAuthenticated() {
       return loginStorage.isLoggedIn();
     },
-    authenticationTest() {
-      const path = BACKEND_URL + 'protected';
-      axios.get(path, {
-        headers: {
-          Authorization: "Bearer " + this.access_token,
-        },
-        access_token: this.access_token,
-      })
-      .then( (res) => {
-        console.log("Succeess");
-        console.log(res);
-      }
-
-      )
-      .catch( (err) => {
-        console.log("Error");
-        console.log(err);
-        //this.$router.push('/about');
-      }
-
-      );
-    },
-    localStorageTest() {
-      console.log(loginStorage.getLoginToken());
-    },
-    logout() {
-      loginStorage.deleteLoginToken();
-      const path = BACKEND_URL + 'logout';
-      axios.get(path, { 
-        headers: {
-          Authorization: "Bearer " + this.access_token,
-        }
-      })
-      .then( (res) => {
-        console.log("Success");
-        console.log(res);
-      }
-
-      )
-      .catch( (err) => {
-        console.log("Error");
-        console.log(err);
-      }
-      );
-    },
   }
 };
 </script>
 
 <style>
 .loginField {
-  height: 30px;
-  width: 200px;
+  height: 40px;
+  width: 300px;
+  margin-bottom: 8px;
 }
 #loginDiv {
   position:absolute;
   top:20%;
   left: 40%;
+}
+.formButton {
+  margin-top: 10px;
 }
 </style>
