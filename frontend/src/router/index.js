@@ -5,6 +5,7 @@ import Login from '../views/Login.vue';
 import Home from '../views/Home.vue';
 import SearchUser from '../views/SearchUser.vue';
 import Profile from '../views/Profile.vue';
+import DebugPage from '../views/Debug.vue';
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile,
+  },
+  {
+    path: '/debug',
+    name: 'Debug',
+    component: DebugPage,
   },
 ];
 

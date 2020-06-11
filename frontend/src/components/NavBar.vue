@@ -20,6 +20,11 @@
     </b-nav-item>
     </b-navbar-nav>
     <b-navbar-nav class="ml-auto">
+      <b-nav-item>
+        <router-link to="/about">
+        About
+        </router-link>
+      </b-nav-item>
       <b-nav-item
       v-on:click="logOut"
       >

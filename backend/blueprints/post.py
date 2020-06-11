@@ -108,8 +108,11 @@ def processComments(posts):
         if commentLookup is None:
             continue
         for comment in commentLookup:
+            #Look up user
+            accountLookup = Account.query.filter_by(id=comment.account_id).one()
             post['comments'].append({
-                'content': comment.content
+                'content': comment.content,
+                'username': accountLookup.username
             })
     
 

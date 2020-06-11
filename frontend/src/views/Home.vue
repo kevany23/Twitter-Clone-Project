@@ -3,12 +3,18 @@
     <NavBar></NavBar>
     <b-form>
       <b-row>
-        <b-button v-on:click="authenticationTest">
+        <b-button
+        style="display:none;"
+        v-on:click="authenticationTest"
+        >
           Authentication Test
         </b-button>
       </b-row>
       <b-row>
-        <b-button v-on:click="localStorageTest">
+        <b-button
+        style="display:none;"
+        v-on:click="localStorageTest"
+        >
           Local Storage Test
         </b-button>
       </b-row>
@@ -19,6 +25,7 @@
         <b-row>
           <b-form-textarea
           v-model="postContent"
+          placeholder="Write a status..."
           style="height:150px"
           >
           </b-form-textarea>
@@ -180,7 +187,7 @@ export default {
 #postStatus {
   position: relative;
   width: 800px;
-  left: 10%;
+  left: 15%;
 }
 #newsFeed {
   position: relative;

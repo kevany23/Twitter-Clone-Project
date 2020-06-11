@@ -6,6 +6,7 @@
         <b-form-input
         type="text"
         placeholder="Search username"
+        v-model="query"
         >
         </b-form-input>
       </b-form>

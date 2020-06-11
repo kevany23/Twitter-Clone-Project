@@ -6,27 +6,46 @@
     <p>
     {{content}}
     </p>
-    <b-button-toolbar>
-      <b-button
-      v-bind:style="likeButtonStyle"
-      v-on:click="onLikeClick"
-      >
-        <b-icon-arrow-up class="h4 mb-0">
-        </b-icon-arrow-up>
-      </b-button>
-      <b-button v-on:click="toggleComments">
-        Comments
-      </b-button>
+    <b-button-toolbar
+    style="justify-content: center"
+    >
+      <b-button-group>
+        <b-button
+        v-bind:style="likeButtonStyle"
+        v-on:click="onLikeClick"
+        >
+          <b-icon-arrow-up class="h4 mb-0">
+          </b-icon-arrow-up>
+        </b-button>
+        <b-button v-on:click="toggleComments">
+          Comments
+        </b-button>
+      </b-button-group>
     </b-button-toolbar>
     <div>
       <b-collapse v-model="showComments">
-        <div
-        v-for="comment in comments"
-        :key="comment.content"
+        <table
+        style="width:100%"
         >
-          <p> {{comment.content}}</p>
-        </div>
-        <b-form>
+          <tbody>
+            <tr
+            class="commentRow"
+            style="width:100%"
+            v-for="comment in comments"
+            :key="comment.content"
+            >
+              <td class="commentUsername">
+                <b>{{comment.username}}</b>
+              </td>
+              <td class="commentContent">
+                {{comment.content}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <b-form
+        style="margin-top: 5px;"
+        >
           <b-row>
             <b-form-textarea
             style="height:50px"
@@ -108,4 +127,27 @@ export default {
 </script>
 
 <style>
+.commentRow {
+  height: 50px;
+  border-color: SkyBlue;
+  border-style: none;
+  margin-bottom: 1em;
+  margin-top: 10px;
+}
+.commentUsername {
+  width: 200px;
+  text-align: left;
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  background-color: whitesmoke;
+  padding-left: 8px;
+}
+.commentContent {
+  width: 600px;
+  text-align: left;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  padding-left: 8px;
+  background-color: whitesmoke;
+}
 </style>
